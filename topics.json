@@ -1,0 +1,270 @@
+{
+  "English": {
+    "Reading": [
+      "Reading for meaning",
+      "Analysis of language, form and structure",
+      "Evaluation of writer's choices",
+      "Comparison of texts"
+    ],
+    "Writing": [
+      "Writing for different purposes and audiences",
+      "Use of language and style",
+      "Structure and organisation",
+      "Accuracy and clarity"
+    ],
+    "Speaking and Listening": [
+      "Discussion and dialogue",
+      "Presentation skills",
+      "Listening skills",
+      "Use of Standard English"
+    ],
+    "Spelling, Punctuation and Grammar": [
+      "Accuracy and consistency",
+      "Knowledge and understanding of SPaG conventions",
+      "Effective use in writing",
+      "Proofreading and editing skills"
+    ]
+  },
+  "Economics": {
+    "Economic methodology and the economic problem": [
+      "Economic methodology",
+      "Nature and scope of economics",
+      "The economic problem",
+      "Opportunity cost"
+    ],
+    "Price determination in a competitive market": [
+      "Demand and supply",
+      "Elasticity",
+      "Equilibrium price and quantity",
+      "Changes in market equilibrium"
+    ],
+    "Production, costs and revenue": [
+      "Production and productivity",
+      "Costs of production",
+      "Revenue",
+      "Profit maximisation"
+    ],
+    "Competitive and concentrated markets": [
+      "Market structures",
+      "Barriers to entry",
+      "Concentration ratios",
+      "Price discrimination"
+    ],
+    "Market failure and government intervention": [
+      "Externalities",
+      "Public goods and quasi-public goods",
+      "Market imperfections",
+      "Government intervention"
+    ],
+    "Globalisation and emerging economies": [
+      "Globalisation",
+      "Emerging and developing economies",
+      "International trade",
+      "Multinational corporations"
+    ]
+  },
+    "French": {
+    "Listening": [
+      "Understanding and responding to spoken language",
+      "Accuracy and detail",
+      "Use of context and understanding of main points",
+      "Awareness of language conventions"
+    ],
+    "Speaking": [
+      "Conveying information and ideas",
+      "Expressing and justifying opinions",
+      "Using language creatively",
+      "Using a range of structures and vocabulary"
+    ],
+    "Reading": [
+      "Understanding and responding to written language",
+      "Accuracy and detail",
+      "Use of context and understanding of main points",
+      "Awareness of language conventions"
+    ],
+    "Writing": [
+      "Conveying information and ideas",
+      "Expressing and justifying opinions",
+      "Using language creatively",
+      "Using a range of structures and vocabulary"
+    ],
+    "Grammar": [
+      "Verb tenses and moods",
+      "Negatives and questions",
+      "Pronouns and adjectives",
+      "Word order and agreement"
+    ],
+    "Vocabulary": [
+      "Basic vocabulary",
+      "More advanced vocabulary",
+      "Topic-specific vocabulary",
+      "Idiomatic expressions and phrases"
+    ]
+  },
+  "Geography": {
+    "Physical Geography": [
+      "Plate tectonics and associated hazards",
+      "Weather and climate",
+      "Ecosystems and biomes",
+      "Rivers, coasts and landscapes"
+    ],
+    "Human Geography": [
+      "Population and settlement",
+      "Migration",
+      "Globalisation",
+      "Development and urbanisation"
+    ],
+    "Geographical Skills": [
+      "Map skills",
+      "Fieldwork skills",
+      "Data analysis and interpretation",
+      "Using geographical information systems (GIS)"
+    ],
+    "Geographical Issues": [
+      "Sustainable development",
+      "Management of hazards",
+      "Environmental impact of economic activities",
+      "Global inequalities and development"
+    ]
+  },
+    "History": {
+    "The USA, 1917-29": [
+      "The impact of the First World War",
+      "Social and political developments",
+      "Prohibition and the rise of organized crime",
+      "The boom and the Wall Street Crash"
+    ],
+    "China, 1911-1989": [
+      "The end of Imperial China",
+      "Sun Yat-sen and the Nationalist Party",
+      "The rise of the Communist Party",
+      "Mao Zedong's rule and its impact"
+    ],
+    "Germany, 1918-45": [
+      "The impact of the First World War",
+      "The Weimar Republic",
+      "Hitler's rise to power and consolidation of Nazi rule",
+      "The Second World War and the Holocaust"
+    ],
+    "The Cold War, 1945-75": [
+      "Origins of the Cold War",
+      "Development of the Cold War",
+      "Crisis points in the Cold War",
+      "Attempts to reduce tensions and end the Cold War"
+    ],
+    "Peacekeeping and International Relations, 1945-2001": [
+      "The role of the United Nations",
+      "Peacekeeping and conflict resolution",
+      "The changing nature of global politics",
+      "Challenges to international peace and security"
+    ]
+  },
+  "Mathematics": {
+    "Number and Algebra": [
+      "Number system",
+      "Algebraic notation",
+      "Sequences and series",
+      "Quadratic equations and graphs"
+    ],
+    "Geometry and Trigonometry": [
+      "Angles and polygons",
+      "Circles and tangents",
+      "Trigonometric ratios and identities",
+      "Coordinate geometry"
+    ],
+    "Statistics and Probability": [
+      "Data handling",
+      "Measures of central tendency and spread",
+      "Probability",
+      "Statistical diagrams and analysis"
+    ],
+    "Vectors and Matrices": [
+      "Vector notation and arithmetic",
+      "Vector geometry",
+      "Matrix notation and arithmetic",
+      "Matrix algebra and transformations"
+    ],
+    "Calculus": [
+      "Differentiation",
+      "Applications of differentiation",
+      "Integration",
+      "Applications of integration"
+    ]
+  },
+    "Biology": {
+    "Characteristics and classification of living organisms": [
+      "Characteristics of living organisms",
+      "Classification and taxonomy",
+      "Variation and inheritance",
+      "Selection and evolution"
+    ],
+    "Cells, tissues, and organs": [
+      "Cell structure and function",
+      "Cell division and reproduction",
+      "Specialization of cells, tissues, and organs",
+      "Organ systems and homeostasis"
+    ],
+    "Plant nutrition": [
+      "Photosynthesis",
+      "Mineral requirements",
+      "Transport of water and nutrients",
+      "Tropisms and plant responses"
+    ],
+    "Human nutrition": [
+      "Nutrient requirements",
+      "Food groups and balanced diets",
+      "Digestion and absorption",
+      "Obesity and health"
+    ],
+    "Respiration and gas exchange": [
+      "Aerobic and anaerobic respiration",
+      "Gas exchange and transport",
+      "Respiratory diseases",
+      "Effects of lifestyle on the respiratory system"
+    ],
+    "Ecology": [
+      "Ecosystems and biomes",
+      "Population dynamics",
+      "Biodiversity and conservation",
+      "Human impact on the environment"
+    ]
+  },
+  "Chemistry": {
+    "Atomic structure and the periodic table": [
+      "Structure of the atom",
+      "Isotopes and radioactivity",
+      "Electronic configuration",
+      "The periodic table and trends in properties"
+    ],
+    "Bonding, structure, and properties of matter": [
+      "Types of bonding",
+      "Shapes of molecules",
+      "Intermolecular forces",
+      "Properties of materials"
+    ],
+    "Chemical changes": [
+      "Chemical reactions and equations",
+      "Acids and bases",
+      "Redox reactions",
+      "Energetics of reactions"
+    ],
+    "Rates of reaction and chemical equilibrium": [
+      "Reaction rates",
+      "Factors affecting reaction rates",
+      "Chemical equilibrium",
+      "Le Chatelier's principle"
+    ],
+    "Organic chemistry": [
+      "Introduction to organic chemistry",
+      "Alkanes, alkenes, and alkynes",
+      "Alcohols and carboxylic acids",
+      "Polymers and plastics"
+    ],
+    "Chemistry of the atmosphere": [
+      "Structure of the atmosphere",
+      "Air pollution",
+      "Greenhouse gases and climate change",
+      "Ozone depletion"
+    ]
+  }
+}
