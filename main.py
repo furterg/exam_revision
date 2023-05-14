@@ -1,4 +1,5 @@
 import os
+import re
 import streamlit as st
 import openai
 import json
@@ -11,9 +12,9 @@ system_message = """
     Then you give a short feedback on the answer.
     Special instructions:
     - Insert a blank line between the question and the answers.
-    - Insert a blank line after each answer item.
     - Your feedback should always start with either 'Correct' of 'Incorrect'.
-    - don't prompt for an answer.
+    - Don't prompt for an answer.
+    - Change the letter of the correct answer between questions.
 
     Now ask questions about the following topic:
     {topic}
@@ -30,7 +31,7 @@ if 'topic_list' not in st.session_state:
         st.session_state.topic_list = json.load(file)
     st.session_state.subject_list = st.session_state.topic_list.keys()
 
-#year_group_list = ('Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12', 'Year 13')
+# year_group_list = ('Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12', 'Year 13')
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 if 'started' not in st.session_state or not st.session_state.started:
@@ -47,7 +48,8 @@ with col1:
         selected_subject = st.selectbox('Subject', st.session_state.subject_list, key='selected_subject')
 with col2:
     if 'started' in st.session_state and st.session_state.started:
-        selected_topic = st.selectbox('Topic', st.session_state.topic_list[selected_subject], key='selected_topic', disabled=True)
+        selected_topic = st.selectbox('Topic', st.session_state.topic_list[selected_subject], key='selected_topic',
+                                      disabled=True)
     else:
         selected_topic = st.selectbox('Topic', st.session_state.topic_list[selected_subject], key='selected_topic')
 
@@ -59,13 +61,15 @@ def send_message(text):
     if st.session_state.debug:
         content = f'''"{text[-1]['content']}" has been submitted to ChatGPT'''
     else:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=text,
-            temperature=0.3,
-        )
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=text,
+                temperature=0.2,
+            )
+        except Exception as e:
+            st.exception(e)
         content = response['choices'][0]['message']['content']
-    # messages.append({"role": "user", "content": content})
     return content
 
 
@@ -91,12 +95,12 @@ def init():
 
 def display_question(offset):
     if st.session_state.num_question > 1:
-        st.write(f'Your score: {st.session_state.student_score}/{st.session_state.num_question -1}')
+        st.write(f'Your score: {st.session_state.student_score}/{st.session_state.num_question - 1}')
     st.markdown(f"## Question {st.session_state.num_question}")
-    st.write(st.session_state.quiz[-offset]['content'])
-
-
-#def add_answer(choice):
+    question = st.session_state.quiz[-offset]['content']
+    # Replace all occurrences of a letter followed by a dot and a space with a new line character followed by the same letter and dot
+    question = re.sub(r'([A-Z][\)\.]) ', r'\r\1 ', question)
+    st.markdown(question)
 
 
 def submit_answer():
@@ -107,8 +111,6 @@ def submit_answer():
         answer = f'I think answer {st.session_state.answer} is Correct.'
         st.session_state.quiz.append({'role': 'user', 'content': answer})
         st.session_state.stage = 'answered'
-        # Add to messages/dialogue history
-        # Send to ChatGPT and get feedback
 
 
 def get_feedback():
@@ -127,12 +129,6 @@ def get_next_question():
     return
 
 
-# if 'quiz' in st.session_state:
-#     st.session_state.quiz
-#     st.write(f'qnum {st.session_state.num_question}')
-#     st.session_state
-
-
 # ------- It all really starts here --------
 # If the quiz has not started, show the 'Start Quiz' button and initialize the quiz
 if 'started' not in st.session_state or st.session_state.stage == 'init':
@@ -146,8 +142,8 @@ elif 'started' in st.session_state and st.session_state.stage == 'question' and 
     # st.write('displaying question')
     display_question(1)
     st.session_state.answer = st.radio('What is your answer?',
-                             options=('A', 'B', 'C', 'D', 'END'),
-                             horizontal=True)
+                                       options=('A', 'B', 'C', 'D', 'END'),
+                                       horizontal=True)
     st.button('Submit answer', on_click=submit_answer)
 elif 'started' in st.session_state and st.session_state.stage == 'answered':
     # st.write('displaying feedback')
@@ -157,10 +153,30 @@ elif 'started' in st.session_state and st.session_state.stage == 'answered':
     st.markdown('---')
     st.markdown(f'### Feedback for question {st.session_state.num_question}')
     st.write(feedback)
-    st.button('Next Question', key='next_question')
+    if st.session_state.num_question == 10:
+        st.session_state.num_question += 1
+        st.session_state.stage = 'question'
+        st.button('View results')
+    else:
+        with st.spinner('Waiting for next question...'):
+            get_next_question()
+        st.session_state.stage = 'question'
+        st.button('Next Question', key='next_question')
 # elif 'started' in st.session_state and st.session_state.stage == 'feedback':
-    st.session_state.stage = 'question'
-    get_next_question()
 else:
-    st.markdown(f'Quiz Complete!\nYour score is {st.session_state.student_score}/{st.session_state.num_question -1}')
-
+    st.markdown(f'Quiz Complete!\nYour score is {st.session_state.student_score}/{st.session_state.num_question - 1}')
+    st.markdown('---')
+    st.markdown('## Thank you for using ChatGPT!')
+    st.markdown('Here are the questions to review:')
+    for i in range(2, len(st.session_state.quiz), 4):
+        st.markdown(f'#### Question {round((i - 1) / 4) + 1}')
+        st.markdown(st.session_state.quiz[i]['content'])
+        if i + 1 < len(st.session_state.quiz):
+            answer_letter = re.sub(".*? ([A-D]) .*?", "\1",  st.session_state.quiz[i + 1]["content"])
+            st.markdown(f'**Your answer**: {answer_letter}')
+        else:
+            st.markdown('**Your answer**: None')
+        if i + 2 < len(st.session_state.quiz):
+            st.markdown(f'#### Feedback for question {round((i - 1) / 4) + 1}')
+            st.markdown(st.session_state.quiz[i + 2]['content'])
+    st.session_state.quiz
