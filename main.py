@@ -35,6 +35,8 @@ year_group_list = ('Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12'
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 if 'started' not in st.session_state or not st.session_state.started:
+    if openai.api_key is None:
+        st.text_input('Please enter your OpenAI API key')
     st.markdown("""
         Please select the subject and topic you want to review.
     """)
