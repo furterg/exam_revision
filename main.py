@@ -193,3 +193,4 @@ else:
         if i + 2 < len(st.session_state.quiz):
             st.markdown(f'#### Feedback for question {round((i - 1) / 4) + 1}')
             st.markdown(st.session_state.quiz[i + 2]['content'])
+    st.markdown('You can reload this page start again.')
