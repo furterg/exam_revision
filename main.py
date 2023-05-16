@@ -1,5 +1,7 @@
 import os
 import re
+import random
+
 import streamlit as st
 import openai
 import json
@@ -100,11 +102,12 @@ def init():
     st.session_state.started = True
     st.session_state.num_question = 1
     st.session_state.student_score = 0
+    st.session_state.level = 'easy'
     prompt = system_message.format(year_group=year_group, subject=selected_subject, topic=selected_topic)
     st.session_state.quiz = [{'role': 'system',
                               'content': prompt},
                              {'role': 'user',
-                              'content': 'First question'}]
+                              'content': 'First question (difficulty: easy)'}]
     init_question = send_message(st.session_state.quiz)
     st.session_state.quiz.append({'role': 'assistant', 'content': init_question})
     st.session_state.stage = 'question'
@@ -115,6 +118,7 @@ def display_question(offset):
     if st.session_state.num_question > 1:
         st.write(f'Your score: {st.session_state.student_score}/{st.session_state.num_question - 1}')
     st.markdown(f"## Question {st.session_state.num_question}")
+    st.markdown(f"*Difficulty: {st.session_state.level}*")
     question = st.session_state.quiz[-offset]['content']
     # Replace all occurrences of a letter followed by a dot and a space with a new line character followed by the same letter and dot
     question = re.sub(r'([A-Z][\)\.]) ', r'\r\1 ', question)
@@ -140,7 +144,9 @@ def get_feedback():
 
 
 def get_next_question():
-    st.session_state.quiz.append({'role': 'user', 'content': 'Next question'})
+    st.session_state.level = random.choice(['easy', 'intermediate', 'difficult'])
+    next_question_text = f"Next question (difficulty: {st.session_state.level})"
+    st.session_state.quiz.append({'role': 'user', 'content': next_question_text})
     st.session_state.num_question += 1
     response = send_message(st.session_state.quiz)
     st.session_state.quiz.append({'role': 'assistant', 'content': response})
@@ -195,4 +201,4 @@ else:
         if i + 2 < len(st.session_state.quiz):
             st.markdown(f'#### Feedback for question {round((i - 1) / 4) + 1}')
             st.markdown(st.session_state.quiz[i + 2]['content'])
-    st.markdown('You can reload this page start again.')
+    st.markdown('You can reload this page to start again.')
