@@ -4,8 +4,8 @@ import streamlit as st
 import openai
 import json
 
-system_message = """
-    You are a Year 11 {subject} teacher in the English National Curriculum.
+system_message = f"""
+    You are a {{year_group}} {{subject}} teacher in the English National Curriculum.
     You communicate by asking multiple choice questions with 4 options. The questions have only one correct answer.
     You ask one question at a time. Be direct, nothing but the question.
     You wait for the student to answer.
@@ -17,8 +17,8 @@ system_message = """
     - Change the letter of the correct answer between questions.
 
     Now ask questions about the following topic:
-    {topic}
-"""
+    {{topic}}
+    """
 
 st.set_page_config(page_title='BSG Revision Quizz', page_icon=':robot:')
 st.image('BSG-RGB.jpg', width=300)
@@ -31,7 +31,7 @@ if 'topic_list' not in st.session_state:
         st.session_state.topic_list = json.load(file)
     st.session_state.subject_list = st.session_state.topic_list.keys()
 
-# year_group_list = ('Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12', 'Year 13')
+year_group_list = ('Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12', 'Year 13')
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 if 'started' not in st.session_state or not st.session_state.started:
@@ -39,19 +39,35 @@ if 'started' not in st.session_state or not st.session_state.started:
         Please select the subject and topic you want to review.
     """)
 
+if 'started' in st.session_state and st.session_state.started:
+    is_started = True
+else:
+    is_started = False
+
+col1, col2 = st.columns(2)
+with col1:
+    selection_mode = st.radio('Subject selection:', ('From list', 'Manual selection'), disabled=is_started)
+with col2:
+    if selection_mode == 'Manual selection':
+        year_group = st.selectbox('Year group:', (year_group_list), index=4,
+                                  disabled=(is_started or selection_mode == 'From list'))
+    else:
+        year_group = st.text_input('Year group:', 'Year 11', disabled=(is_started or selection_mode == 'From list'))
+
 col1, col2 = st.columns(2)
 
-with col1:
-    if 'started' in st.session_state and st.session_state.started:
-        selected_subject = st.selectbox('Subject', st.session_state.subject_list, key='selected_subject', disabled=True)
-    else:
-        selected_subject = st.selectbox('Subject', st.session_state.subject_list, key='selected_subject')
-with col2:
-    if 'started' in st.session_state and st.session_state.started:
+if selection_mode == 'From list':
+    with col1:
+        selected_subject = st.selectbox('Subject', st.session_state.subject_list, key='selected_subject',
+                                        disabled=is_started)
+    with col2:
         selected_topic = st.selectbox('Topic', st.session_state.topic_list[selected_subject], key='selected_topic',
-                                      disabled=True)
-    else:
-        selected_topic = st.selectbox('Topic', st.session_state.topic_list[selected_subject], key='selected_topic')
+                                      disabled=is_started)
+else:
+    with col1:
+        selected_subject = st.text_input('Subject', key='selected_subject', disabled=is_started)
+    with col2:
+        selected_topic = st.text_input('Topic', key='selected_topic', disabled=is_started)
 
 
 def send_message(text):
@@ -82,7 +98,7 @@ def init():
     st.session_state.started = True
     st.session_state.num_question = 1
     st.session_state.student_score = 0
-    prompt = system_message.format(subject=selected_subject, topic=selected_topic)
+    prompt = system_message.format(year_group=year_group, subject=selected_subject, topic=selected_topic)
     st.session_state.quiz = [{'role': 'system',
                               'content': prompt},
                              {'role': 'user',
@@ -172,7 +188,7 @@ else:
         st.markdown(f'#### Question {round((i - 1) / 4) + 1}')
         st.markdown(st.session_state.quiz[i]['content'])
         if i + 1 < len(st.session_state.quiz):
-            answer_letter = re.sub(".*? ([A-D]) .*?", "\1",  st.session_state.quiz[i + 1]["content"])
+            answer_letter = re.sub(".*? ([A-D]) .*?", "\1", st.session_state.quiz[i + 1]["content"])
             st.markdown(f'**Your answer**: {answer_letter}')
         else:
             st.markdown('**Your answer**: None')
