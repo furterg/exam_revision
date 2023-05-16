@@ -152,7 +152,6 @@ if 'started' not in st.session_state or st.session_state.stage == 'init':
     st.session_state.stage = 'init'
     st.session_state.started = False
     st.button('Start Quiz', key='start_quiz', on_click=init)
-    # st.write('Creating the first question...')
 # If the quiz has started, show the current question, get the answer
 elif 'started' in st.session_state and st.session_state.stage == 'question' and st.session_state.num_question < 11:
     # st.write('displaying question')
@@ -162,7 +161,6 @@ elif 'started' in st.session_state and st.session_state.stage == 'question' and 
                                        horizontal=True)
     st.button('Submit answer', on_click=submit_answer)
 elif 'started' in st.session_state and st.session_state.stage == 'answered':
-    # st.write('displaying feedback')
     display_question(2)
     feedback = get_feedback()
     st.markdown(f'Your answer is: {st.session_state.answer}')
@@ -195,4 +193,3 @@ else:
         if i + 2 < len(st.session_state.quiz):
             st.markdown(f'#### Feedback for question {round((i - 1) / 4) + 1}')
             st.markdown(st.session_state.quiz[i + 2]['content'])
-    st.session_state.quiz
