@@ -266,5 +266,43 @@
       "Greenhouse gases and climate change",
       "Ozone depletion"
     ]
+  },
+  "ICT": {
+    "Data, information, knowledge and processing": [
+      "Data, information and knowledge",
+      "Data representation and data types",
+      "Data processing and manipulation",
+      "Information storage and retrieval"
+    ],
+    "Hardware and software components": [
+      "Input devices",
+      "Output devices",
+      "Storage devices and media",
+      "Operating systems and utility software"
+    ],
+    "Networks and communication": [
+      "Network types and topologies",
+      "Network protocols and layers",
+      "Data transmission and network security",
+      "Internet services and cloud computing"
+    ],
+    "The use of ICT in society": [
+      "The impact of ICT on society",
+      "Ethical, legal and security issues",
+      "Health and safety considerations",
+      "Environmental implications"
+    ],
+    "ICT applications": [
+      "Word processing and desktop publishing",
+      "Spreadsheets and databases",
+      "Presentations and graphics",
+      "Web design and multimedia"
+    ],
+    "Data handling, modelling and integration": [
+      "Data validation and verification",
+      "Data manipulation and analysis",
+      "Database design and development",
+      "Data integration and automation"
+    ]
   }
 }
