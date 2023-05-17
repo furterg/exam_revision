@@ -31,7 +31,7 @@ st.session_state.debug = False
 if 'topic_list' not in st.session_state:
     with open('topics.json', 'r') as file:
         st.session_state.topic_list = json.load(file)
-    st.session_state.subject_list = st.session_state.topic_list.keys()
+    st.session_state.subject_list = sorted(st.session_state.topic_list.keys())
 
 year_group_list = ('Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12', 'Year 13')
 openai.api_key = os.getenv('OPENAI_API_KEY')
@@ -53,7 +53,7 @@ with col1:
     selection_mode = st.radio('Subject selection:', ('From list', 'Manual selection'), disabled=is_started)
 with col2:
     if selection_mode == 'Manual selection':
-        year_group = st.selectbox('Year group:', (year_group_list), index=4,
+        year_group = st.selectbox('Year group:', year_group_list, index=4,
                                   disabled=(is_started or selection_mode == 'From list'))
     else:
         year_group = st.text_input('Year group:', 'Year 11', disabled=(is_started or selection_mode == 'From list'))
@@ -65,7 +65,7 @@ if selection_mode == 'From list':
         selected_subject = st.selectbox('Subject', st.session_state.subject_list, key='selected_subject',
                                         disabled=is_started)
     with col2:
-        selected_topic = st.selectbox('Topic', st.session_state.topic_list[selected_subject], key='selected_topic',
+        selected_topic = st.selectbox('Topic', sorted(st.session_state.topic_list[selected_subject]), key='selected_topic',
                                       disabled=is_started)
 else:
     with col1:
