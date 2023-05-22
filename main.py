@@ -72,7 +72,6 @@ with col2:
     else:
         year_group = st.selectbox('Year group:', ('Year 10', 'Year 11'),
                                   disabled=(is_started or selection_mode == 'Manual selection'))
-        # year_group = st.text_input('Year group:', 'Year 11', disabled=(is_started or selection_mode == 'From list'))
 
 col1, col2 = st.columns(2)
 
@@ -107,7 +106,6 @@ def send_message(text):
             )
             content = response['choices'][0]['message']['content']
         except Exception as e:
-            response = st.exception(e)
             content = 'Error: ' + str(e)
     return content
 
@@ -177,19 +175,20 @@ def get_next_question():
 # ------- It all really starts here --------
 # If the quiz has not started, show the 'Start Quiz' button and initialize the quiz
 if 'started' not in st.session_state or st.session_state.stage == 'init':
-    # st.write('Initializing the quiz...')
+    # Initializing the quiz...
     st.session_state.stage = 'init'
     st.session_state.started = False
     st.button('Start Quiz', key='start_quiz', on_click=init)
 # If the quiz has started, show the current question, get the answer
 elif 'started' in st.session_state and st.session_state.stage == 'question' and st.session_state.num_question < 11:
-    # st.write('displaying question')
+    # displaying question
     display_question(1)
     st.session_state.answer = st.radio('What is your answer?',
                                        options=('A', 'B', 'C', 'D', 'END'),
                                        horizontal=True)
     st.button('Submit answer', on_click=submit_answer)
 elif 'started' in st.session_state and st.session_state.stage == 'answered':
+    # displaying feedback and fetching next question
     display_question(2)
     feedback = get_feedback()
     st.markdown(f'Your answer is: {st.session_state.answer}')
@@ -205,8 +204,8 @@ elif 'started' in st.session_state and st.session_state.stage == 'answered':
             get_next_question()
         st.session_state.stage = 'question'
         st.button('Next Question', key='next_question')
-# elif 'started' in st.session_state and st.session_state.stage == 'feedback':
 else:
+    # Quiz complete, display all answered questions
     st.markdown(f'Quiz Complete!\nYour score is {st.session_state.student_score}/{st.session_state.num_question - 1}')
     st.markdown('---')
     st.markdown('## Thank you for using ChatGPT!')
