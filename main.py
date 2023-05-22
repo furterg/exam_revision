@@ -33,12 +33,19 @@ st.session_state.debug = False
 if 'topic_list' not in st.session_state:
     st.session_state.topic_list = {}
     st.session_state.subject_list = {}
-    with open('year11.json', 'r') as file:
-        st.session_state.topic_list['Year 11'] = json.load(file)
-    st.session_state.subject_list['Year 11'] = sorted(st.session_state.topic_list['Year 11'].keys())
-    with open('year10.json', 'r') as file:
-        st.session_state.topic_list['Year 10'] = json.load(file)
-    st.session_state.subject_list['Year 10'] = sorted(st.session_state.topic_list['Year 10'].keys())
+    for yg in ('Year 10', 'Year 11'):
+        try:
+            # get filename from Year Group (e.g. Year 10 --> 'year10.json')
+            file_name = f'{yg.lower().replace(" ", "")}.json'
+            with open(file_name, 'r') as file:
+                st.session_state.topic_list[yg] = json.load(file)
+            st.session_state.subject_list[yg] = sorted(st.session_state.topic_list[yg].keys())
+        except FileNotFoundError:
+            # Handle the case when the file is not found
+            st.error(f"File '{file_name}' not found. Skipping...", icon="🚨")
+        except json.JSONDecodeError:
+            # Handle the case when there is an issue decoding the JSON file
+            st.error(f"Error decoding JSON file '{file_name}'. Skipping...", icon="🚨")
 
 year_group_list = ('Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12', 'Year 13')
 openai.api_key = os.getenv('OPENAI_API_KEY')
@@ -114,12 +121,12 @@ def init():
     st.session_state.started = True
     st.session_state.num_question = 1
     st.session_state.student_score = 0
-    st.session_state.level = 'easy'
+    st.session_state.level = random.choice(['easy', 'intermediate', 'difficult'])
     prompt = system_message.format(year_group=year_group, subject=selected_subject, topic=selected_topic)
     st.session_state.quiz = [{'role': 'system',
                               'content': prompt},
                              {'role': 'user',
-                              'content': 'First question (difficulty: easy)'}]
+                              'content': f'First question (difficulty: {st.session_state.level})'}]
     init_question = send_message(st.session_state.quiz)
     st.session_state.quiz.append({'role': 'assistant', 'content': init_question})
     st.session_state.stage = 'question'
