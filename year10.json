@@ -1,0 +1,43 @@
+{
+  "ICT": {
+    "Digital Devices": [
+      "Types of digital devices",
+      "Features of digital devices",
+      "Software",
+      "Types of peripheral devices – input and output",
+      "Types of peripheral devices – storage",
+      "Memory",
+      "Processors",
+      "ICT systems to meet specified needs"
+    ],
+    "Connectivity": [
+      "Types of digital communications",
+      "Factors influencing the choice of digital communication in a network",
+      "Requirements for connecting to a network, including the internet",
+      "Benefits of using a LAN/home network",
+      "Securing data on a network, including the internet"
+    ],
+    "Operating Online": [
+      "Potential risks to data and personal information when information is transmitted and stored digitally",
+      "Impact of the internet on individuals",
+      "Online working from home",
+      "Impact of the internet on organisations",
+      "Impact of the internet on society",
+      "Types of online communities",
+      "Use of online communities",
+      "Implications of the use of digital technologies",
+      "Availability of information online and the use of online information"
+    ],
+    "Online Goods and Services": [
+      "Types of services",
+      "Impact of online services",
+      "Online software"
+    ],
+    "Applying Information and Communication Technology": [
+      "Software applications",
+      "Data and information",
+      "Using software applications",
+      "Reviewing outcomes"
+    ]
+  }
+}

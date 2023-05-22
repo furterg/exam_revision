@@ -6,12 +6,14 @@ import streamlit as st
 import openai
 import json
 
+# Set the temperature for OpenAI to generate a response
+temp = 0.5
 system_message = f"""
     You are a {{year_group}} {{subject}} teacher in the English National Curriculum.
     You communicate by asking multiple choice questions with 4 options. The questions have only one correct answer.
     You ask one question at a time. Be direct, nothing but the question.
     You wait for the student to answer.
-    Then you give a short feedback on the answer.
+    Then you give a short explanation on the answer.
     Special instructions:
     - Insert a blank line between the question and the answers.
     - Your feedback should always start with either 'Correct' of 'Incorrect'.
@@ -29,9 +31,14 @@ st.header('BSG Revision Quizz')
 st.session_state.debug = False
 
 if 'topic_list' not in st.session_state:
-    with open('topics.json', 'r') as file:
-        st.session_state.topic_list = json.load(file)
-    st.session_state.subject_list = sorted(st.session_state.topic_list.keys())
+    st.session_state.topic_list = {}
+    st.session_state.subject_list = {}
+    with open('year11.json', 'r') as file:
+        st.session_state.topic_list['Year 11'] = json.load(file)
+    st.session_state.subject_list['Year 11'] = sorted(st.session_state.topic_list['Year 11'].keys())
+    with open('year10.json', 'r') as file:
+        st.session_state.topic_list['Year 10'] = json.load(file)
+    st.session_state.subject_list['Year 10'] = sorted(st.session_state.topic_list['Year 10'].keys())
 
 year_group_list = ('Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11', 'Year 12', 'Year 13')
 openai.api_key = os.getenv('OPENAI_API_KEY')
@@ -56,16 +63,20 @@ with col2:
         year_group = st.selectbox('Year group:', year_group_list, index=4,
                                   disabled=(is_started or selection_mode == 'From list'))
     else:
-        year_group = st.text_input('Year group:', 'Year 11', disabled=(is_started or selection_mode == 'From list'))
+        year_group = st.selectbox('Year group:', ('Year 10', 'Year 11'),
+                                  disabled=(is_started or selection_mode == 'Manual selection'))
+        # year_group = st.text_input('Year group:', 'Year 11', disabled=(is_started or selection_mode == 'From list'))
 
 col1, col2 = st.columns(2)
 
 if selection_mode == 'From list':
     with col1:
-        selected_subject = st.selectbox('Subject', st.session_state.subject_list, key='selected_subject',
+        selected_subject = st.selectbox('Subject', st.session_state.subject_list[year_group],
+                                        key='selected_subject',
                                         disabled=is_started)
     with col2:
-        selected_topic = st.selectbox('Topic', sorted(st.session_state.topic_list[selected_subject]), key='selected_topic',
+        selected_topic = st.selectbox('Topic', sorted(st.session_state.topic_list[year_group][selected_subject]),
+                                      key='selected_topic',
                                       disabled=is_started)
 else:
     with col1:
@@ -75,9 +86,9 @@ else:
 
 
 def send_message(text):
-    '''
+    """
     text: [str] message to be sent to ChatGPT
-    '''
+    """
     if st.session_state.debug:
         content = f'''"{text[-1]['content']}" has been submitted to ChatGPT'''
     else:
@@ -85,11 +96,12 @@ def send_message(text):
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=text,
-                temperature=0.2,
+                temperature=temp,
             )
+            content = response['choices'][0]['message']['content']
         except Exception as e:
-            st.exception(e)
-        content = response['choices'][0]['message']['content']
+            response = st.exception(e)
+            content = 'Error: ' + str(e)
     return content
 
 
@@ -120,7 +132,8 @@ def display_question(offset):
     st.markdown(f"## Question {st.session_state.num_question}")
     st.markdown(f"*Difficulty: {st.session_state.level}*")
     question = st.session_state.quiz[-offset]['content']
-    # Replace all occurrences of a letter followed by a dot and a space with a new line character followed by the same letter and dot
+    # Replace all occurrences of a letter followed by a dot and a space with a new line character followed by the
+    # same letter and dot
     question = re.sub(r'([A-Z][\)\.]) ', r'\r\1 ', question)
     st.markdown(question)
 
@@ -145,7 +158,8 @@ def get_feedback():
 
 def get_next_question():
     st.session_state.level = random.choice(['easy', 'intermediate', 'difficult'])
-    next_question_text = f"Next question (difficulty: {st.session_state.level})"
+    correct = random.choice(['A', 'B', 'C', 'D'])
+    next_question_text = f"Next question (difficulty: {st.session_state.level}, correct answer: {correct})"
     st.session_state.quiz.append({'role': 'user', 'content': next_question_text})
     st.session_state.num_question += 1
     response = send_message(st.session_state.quiz)
@@ -194,7 +208,7 @@ else:
         st.markdown(f'#### Question {round((i - 1) / 4) + 1}')
         st.markdown(st.session_state.quiz[i]['content'])
         if i + 1 < len(st.session_state.quiz):
-            answer_letter = re.sub(".*? ([A-D]) .*?", "\1", st.session_state.quiz[i + 1]["content"])
+            answer_letter = re.findall(r"\s[A-D]\s", st.session_state.quiz[i + 1]['content'])[0]
             st.markdown(f'**Your answer**: {answer_letter}')
         else:
             st.markdown('**Your answer**: None')
@@ -202,3 +216,4 @@ else:
             st.markdown(f'#### Feedback for question {round((i - 1) / 4) + 1}')
             st.markdown(st.session_state.quiz[i + 2]['content'])
     st.markdown('You can reload this page to start again.')
+# st.session_state.quiz
