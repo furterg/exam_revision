@@ -34,9 +34,9 @@ if 'topic_list' not in st.session_state:
     st.session_state.topic_list = {}
     st.session_state.subject_list = {}
     for yg in ('Year 10', 'Year 11'):
+        # get filename from Year Group (e.g. Year 10 --> 'year10.json')
+        file_name = f'{yg.lower().replace(" ", "")}.json'
         try:
-            # get filename from Year Group (e.g. Year 10 --> 'year10.json')
-            file_name = f'{yg.lower().replace(" ", "")}.json'
             with open(file_name, 'r') as file:
                 st.session_state.topic_list[yg] = json.load(file)
             st.session_state.subject_list[yg] = sorted(st.session_state.topic_list[yg].keys())
@@ -139,7 +139,7 @@ def display_question(offset):
     question = st.session_state.quiz[-offset]['content']
     # Replace all occurrences of a letter followed by a dot and a space with a new line character followed by the
     # same letter and dot
-    question = re.sub(r'([A-Z][\)\.]) ', r'\r\1 ', question)
+    question = re.sub(r'([A-Z][).]) ', r'\r\1 ', question)
     st.markdown(question)
 
 
