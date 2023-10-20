@@ -2,3 +2,4 @@ streamlit
 openai
 numpy>=1.22.2 # not directly required, pinned by Snyk to avoid a vulnerability
 tornado>=6.3.2 # not directly required, pinned by Snyk to avoid a vulnerability
+validators>=0.21.0 # not directly required, pinned by Snyk to avoid a vulnerability
